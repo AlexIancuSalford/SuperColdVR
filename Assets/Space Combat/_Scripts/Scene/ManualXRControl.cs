@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Management;
 
-namespace SpaceCombat
+namespace SpaceCombat.Scene
 {
     public class ManualXRControl : MonoBehaviour
     {

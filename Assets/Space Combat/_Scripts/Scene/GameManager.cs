@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SpaceCombat
+namespace SpaceCombat.Scene
 {
     public class GameManager : MonoBehaviour
     {

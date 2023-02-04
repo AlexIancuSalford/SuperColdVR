@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Management;
 
-namespace SpaceCombat.Scene
+namespace SuperColdVR.Scene
 {
     public class ManualXRControl : MonoBehaviour
     {

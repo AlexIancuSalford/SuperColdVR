@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SpaceCombat.Scene
+namespace SuperColdVR.Scene
 {
     public class GameManager : MonoBehaviour
     {

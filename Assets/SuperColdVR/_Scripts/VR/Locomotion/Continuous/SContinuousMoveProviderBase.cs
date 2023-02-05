@@ -1,6 +1,6 @@
+using SuperColdVR.VR.Core;
 using SuperColdVR.VR.Locomotion.Base;
-using SuperColdVR.VR.Utils.Enums;
-using Unity.XR.CoreUtils;
+using SuperColdVR.VR.Utils;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -68,7 +68,7 @@ namespace SuperColdVR.VR.Locomotion.Continuous
         {
             if (input == Vector2.zero) { return Vector3.zero; }
 
-            XROrigin xrRig = LocomotionSystem.XRRig;
+            SXROrigin xrRig = LocomotionSystem.XRRig;
             if (xrRig == null) { return Vector3.zero; }
 
             Vector3 inputMove = Vector3.ClampMagnitude(new Vector3(EnableStrafe ? input.x : 0f, 0f, input.y), 1f);
@@ -77,7 +77,7 @@ namespace SuperColdVR.VR.Locomotion.Continuous
             Transform forwardSourceTransform = ForwardSource == null ? xrRig.Camera.transform : ForwardSource;
             Vector3 inputForwardInWorldSpace = forwardSourceTransform.forward;
 
-            Transform originTransform = xrRig.Origin.transform;
+            Transform originTransform = xrRig.OriginBaseGameObject.transform;
             float speedFactor = MoveSpeed * Time.deltaTime * originTransform.localScale.x; // Adjust speed with user scale
 
             // If flying, just compute move directly from input and forward source
@@ -104,7 +104,7 @@ namespace SuperColdVR.VR.Locomotion.Continuous
 
         protected virtual void MoveRig(Vector3 translationInWorldSpace)
         {
-            XROrigin xrRig = LocomotionSystem.XRRig;
+            SXROrigin xrRig = LocomotionSystem.XRRig;
             if (xrRig == null) { return; }
 
             FindCharacterController();
@@ -138,7 +138,7 @@ namespace SuperColdVR.VR.Locomotion.Continuous
                 if (CanBeginLocomotion() && BeginLocomotion())
                 {
                     isMovingXROrigin = true;
-                    xrRig.Origin.transform.position += motion;
+                    xrRig.OriginBaseGameObject.transform.position += motion;
                     EndLocomotion();
                 }
             }
@@ -146,14 +146,14 @@ namespace SuperColdVR.VR.Locomotion.Continuous
 
         void FindCharacterController()
         {
-            XROrigin xrRig = LocomotionSystem.XRRig;
+            SXROrigin xrRig = LocomotionSystem.XRRig;
             if (xrRig == null) { return; }
 
             // Save a reference to the optional CharacterController on the rig GameObject
             // that will be used to move instead of modifying the Transform directly.
             if (characterController == null && !attemptedGetCharacterController)
             {
-                characterController = xrRig.Origin.GetComponent<CharacterController>();
+                characterController = xrRig.OriginBaseGameObject.GetComponent<CharacterController>();
                 attemptedGetCharacterController = true;
             }
         }

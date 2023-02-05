@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 5996.912, g: 4236.8945, b: 4197.1094, a: 1}
+  m_IndirectSpecularColor: {r: 5994.588, g: 4236.8594, b: 4198.7188, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -586,35 +586,18 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 812313784}
-  - component: {fileID: 812313783}
+  - component: {fileID: 1734249587797583301}
   - component: {fileID: 1734249587797583300}
   - component: {fileID: 1734249587797583299}
   - component: {fileID: 1734249587797583298}
   - component: {fileID: 1734249587797583297}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &812313783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 812313781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Camera: {fileID: 1073111619}
-  m_OriginBaseGameObject: {fileID: 812313781}
-  m_CameraFloorOffsetObject: {fileID: 1746441369}
-  m_RequestedTrackingOriginMode: 2
-  m_CameraYOffset: 1.1176
 --- !u!4 &812313784
 Transform:
   m_ObjectHideFlags: 0
@@ -623,7 +606,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 812313781}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.29, y: -0.32, z: -2.44}
+  m_LocalPosition: {x: 0.56362677, y: 0.06, z: -2.6812165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2975,3 +2958,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ActionAssets>k__BackingField:
   - {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &1734249587797583301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812313781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 169f46cffe3da1b4b9ad351199623b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Camera>k__BackingField: {fileID: 1073111619}
+  <OriginBaseGameObject>k__BackingField: {fileID: 812313781}
+  cameraFloorOffsetObject: {fileID: 1746441369}
+  requestedTrackingOriginMode: 2
+  cameraYOffset: 1.1176

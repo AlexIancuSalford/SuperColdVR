@@ -1,4 +1,4 @@
-using SuperColdVR.VR.Utils.Enums;
+using SuperColdVR.VR.Utils;
 using System;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;

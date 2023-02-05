@@ -1,7 +1,10 @@
-public enum ELocomotionPhase
+namespace SuperColdVR.VR.Utils
 {
-    Idle,
-    Started,
-    Moving,
-    Done,
+    public enum ELocomotionPhase
+    {
+        Idle,
+        Started,
+        Moving,
+        Done,
+    }
 }

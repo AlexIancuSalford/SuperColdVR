@@ -1,5 +1,5 @@
-using SuperColdVR.VR.Utils.Enums;
-using Unity.XR.CoreUtils;
+using SuperColdVR.VR.Core;
+using SuperColdVR.VR.Utils;
 using UnityEngine;
 
 namespace SuperColdVR.VR.Locomotion.Base
@@ -8,15 +8,15 @@ namespace SuperColdVR.VR.Locomotion.Base
     {
         private SLocomotionProvider CurrentExclusiveProvider { get; set; }
         private float TimeMadeExclusive { get; set; }
-        public XROrigin XRRig { get; private set; } = null;
+        public SXROrigin XRRig { get; private set; } = null;
 
-        [field: SerializeField] private float OperationTimeout { get; set; } = 10f;
+        [field : SerializeField] private float OperationTimeout { get; set; } = 10f;
 
         public bool IsBusy => CurrentExclusiveProvider != null;
 
         protected void Awake()
         {
-            XRRig = GetComponent<XROrigin>();
+            XRRig = GetComponent<SXROrigin>();
         }
 
         protected void Update()

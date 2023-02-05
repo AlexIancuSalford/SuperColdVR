@@ -1,4 +1,4 @@
-namespace SuperColdVR.VR.Utils.Enums
+namespace SuperColdVR.VR.Utils
 {
     public enum EGravityApplicationMode
     {

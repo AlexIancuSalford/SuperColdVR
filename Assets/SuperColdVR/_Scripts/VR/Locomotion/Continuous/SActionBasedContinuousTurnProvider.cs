@@ -7,51 +7,47 @@ namespace SuperColdVR.VR.Locomotion.Continuous
 {
     public class SActionBasedContinuousTurnProvider : SContinuousTurnProviderBase
     {
-        [SerializeField]
-        InputActionProperty m_LeftHandTurnAction;
-        public InputActionProperty leftHandTurnAction
+        [SerializeField] private InputActionProperty leftHandTurnAction;
+        public InputActionProperty LeftHandTurnAction
         {
-            get => m_LeftHandTurnAction;
-            set => SetInputActionProperty(ref m_LeftHandTurnAction, value);
+            get => leftHandTurnAction;
+            set => SetInputActionProperty(ref leftHandTurnAction, value);
         }
 
-        [SerializeField]
-        InputActionProperty m_RightHandTurnAction;
-        public InputActionProperty rightHandTurnAction
+        [SerializeField] private InputActionProperty rightHandTurnAction;
+        public InputActionProperty RightHandTurnAction
         {
-            get => m_RightHandTurnAction;
-            set => SetInputActionProperty(ref m_RightHandTurnAction, value);
+            get => rightHandTurnAction;
+            set => SetInputActionProperty(ref rightHandTurnAction, value);
         }
 
         protected void OnEnable()
         {
-            m_LeftHandTurnAction.EnableDirectAction();
-            m_RightHandTurnAction.EnableDirectAction();
+            leftHandTurnAction.EnableDirectAction();
+            rightHandTurnAction.EnableDirectAction();
         }
 
         protected void OnDisable()
         {
-            m_LeftHandTurnAction.DisableDirectAction();
-            m_RightHandTurnAction.DisableDirectAction();
+            leftHandTurnAction.DisableDirectAction();
+            rightHandTurnAction.DisableDirectAction();
         }
 
         protected override Vector2 ReadInput()
         {
-            var leftHandValue = m_LeftHandTurnAction.action?.ReadValue<Vector2>() ?? Vector2.zero;
-            var rightHandValue = m_RightHandTurnAction.action?.ReadValue<Vector2>() ?? Vector2.zero;
+            Vector2 leftHandValue = leftHandTurnAction.action?.ReadValue<Vector2>() ?? Vector2.zero;
+            Vector2 rightHandValue = rightHandTurnAction.action?.ReadValue<Vector2>() ?? Vector2.zero;
 
             return leftHandValue + rightHandValue;
         }
 
-        void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
+        private void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
         {
-            if (Application.isPlaying)
-                property.DisableDirectAction();
+            if (Application.isPlaying) { property.DisableDirectAction(); }
 
             property = value;
 
-            if (Application.isPlaying && isActiveAndEnabled)
-                property.EnableDirectAction();
+            if (Application.isPlaying && isActiveAndEnabled) { property.EnableDirectAction(); }
         }
     }
 }

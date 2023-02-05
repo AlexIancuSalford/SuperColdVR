@@ -6,23 +6,17 @@ namespace SuperColdVR.VR.Locomotion.Base
 {
     public abstract class SContinuousTurnProviderBase : SLocomotionProvider
     {
-        [SerializeField]
-        float m_TurnSpeed = 60f;
-        public float turnSpeed
-        {
-            get => m_TurnSpeed;
-            set => m_TurnSpeed = value;
-        }
+        [field : SerializeField] private float TurnSpeed { get; set; } = 60f;
 
-        bool m_IsTurningXROrigin;
+        private bool isTurningXROrigin;
 
         protected void Update()
         {
-            m_IsTurningXROrigin = false;
+            isTurningXROrigin = false;
 
             // Use the input amount to scale the turn speed.
-            var input = ReadInput();
-            var turnAmount = GetTurnAmount(input);
+            Vector2 input = ReadInput();
+            float turnAmount = GetTurnAmount(input);
 
             TurnRig(turnAmount);
 
@@ -30,15 +24,15 @@ namespace SuperColdVR.VR.Locomotion.Base
             {
                 case ELocomotionPhase.Idle:
                 case ELocomotionPhase.Started:
-                    if (m_IsTurningXROrigin)
+                    if (isTurningXROrigin)
                         LocomotionPhase = ELocomotionPhase.Moving;
                     break;
                 case ELocomotionPhase.Moving:
-                    if (!m_IsTurningXROrigin)
+                    if (!isTurningXROrigin)
                         LocomotionPhase = ELocomotionPhase.Done;
                     break;
                 case ELocomotionPhase.Done:
-                    LocomotionPhase = m_IsTurningXROrigin ? ELocomotionPhase.Moving : ELocomotionPhase.Idle;
+                    LocomotionPhase = isTurningXROrigin ? ELocomotionPhase.Moving : ELocomotionPhase.Idle;
                     break;
                 default:
                     Assert.IsTrue(false, $"Unhandled {nameof(LocomotionPhase)}={LocomotionPhase}");
@@ -50,10 +44,9 @@ namespace SuperColdVR.VR.Locomotion.Base
 
         protected virtual float GetTurnAmount(Vector2 input)
         {
-            if (input == Vector2.zero)
-                return 0f;
+            if (input == Vector2.zero) { return 0f; }
 
-            var cardinal = SCardinalUtility.GetNearestCardinal(input);
+            ECardinal cardinal = SCardinalUtility.GetNearestCardinal(input);
             switch (cardinal)
             {
                 case ECardinal.North:
@@ -61,7 +54,7 @@ namespace SuperColdVR.VR.Locomotion.Base
                     break;
                 case ECardinal.East:
                 case ECardinal.West:
-                    return input.magnitude * (Mathf.Sign(input.x) * m_TurnSpeed * Time.deltaTime);
+                    return input.magnitude * (Mathf.Sign(input.x) * TurnSpeed * Time.deltaTime);
                 default:
                     Assert.IsTrue(false, $"Unhandled {nameof(ECardinal)}={cardinal}");
                     break;
@@ -77,10 +70,10 @@ namespace SuperColdVR.VR.Locomotion.Base
 
             if (CanBeginLocomotion() && BeginLocomotion())
             {
-                var xrOrigin = LocomotionSystem.XRRig;
+                Core.SXROrigin xrOrigin = LocomotionSystem.XRRig;
                 if (xrOrigin != null)
                 {
-                    m_IsTurningXROrigin = true;
+                    isTurningXROrigin = true;
                     xrOrigin.RotateAroundCameraUsingOriginUp(turnAmount);
                 }
 

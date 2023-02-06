@@ -100,8 +100,8 @@ namespace SuperColdVR.VR.Core
         {
             if (cameraFloorOffsetObject != null)
             {
-                var offsetTransform = cameraFloorOffsetObject.transform;
-                var desiredPosition = offsetTransform.localPosition;
+                Transform offsetTransform = cameraFloorOffsetObject.transform;
+                Vector3 desiredPosition = offsetTransform.localPosition;
                 desiredPosition.y = y;
                 offsetTransform.localPosition = desiredPosition;
             }
@@ -109,8 +109,7 @@ namespace SuperColdVR.VR.Core
 
         private void TryInitializeCamera()
         {
-            if (!Application.isPlaying)
-                return;
+            if (!Application.isPlaying) { return; }
 
             cameraInitialized = SetupCamera();
             if (!cameraInitialized & !cameraInitializing) { StartCoroutine(RepeatInitializeCamera()); }
@@ -118,12 +117,12 @@ namespace SuperColdVR.VR.Core
 
         private bool SetupCamera()
         {
-            var initialized = true;
+            bool initialized = true;
 
             SubsystemManager.GetInstances(inputSubsystems);
             if (inputSubsystems.Count > 0)
             {
-                foreach (var inputSubsystem in inputSubsystems)
+                foreach (XRInputSubsystem inputSubsystem in inputSubsystems)
                 {
                     if (SetupCamera(inputSubsystem))
                     {
@@ -144,10 +143,9 @@ namespace SuperColdVR.VR.Core
 
         private bool SetupCamera(XRInputSubsystem inputSubsystem)
         {
-            if (inputSubsystem == null)
-                return false;
+            if (inputSubsystem == null) { return false; }
 
-            var successful = true;
+            bool successful = true;
 
             switch (requestedTrackingOriginMode)
             {
@@ -157,14 +155,13 @@ namespace SuperColdVR.VR.Core
                 case ETrackingOriginMode.Device:
                 case ETrackingOriginMode.Floor:
                     {
-                        var supportedModes = inputSubsystem.GetSupportedTrackingOriginModes();
+                        TrackingOriginModeFlags supportedModes = inputSubsystem.GetSupportedTrackingOriginModes();
 
                         // We need to check for Unknown because we may not be in a state where we can read this data yet.
-                        if (supportedModes == TrackingOriginModeFlags.Unknown)
-                            return false;
+                        if (supportedModes == TrackingOriginModeFlags.Unknown) { return false; }
 
                         // Convert from the request enum to the flags enum that is used by the subsystem
-                        var equivalentFlagsMode = requestedTrackingOriginMode == ETrackingOriginMode.Device
+                        TrackingOriginModeFlags equivalentFlagsMode = requestedTrackingOriginMode == ETrackingOriginMode.Device
                             ? TrackingOriginModeFlags.Device
                             : TrackingOriginModeFlags.Floor;
 
@@ -187,11 +184,12 @@ namespace SuperColdVR.VR.Core
                     return false;
             }
 
-            if (successful)
-                MoveOffsetHeight();
+            if (successful) { MoveOffsetHeight(); }
 
             if (CurrentTrackingOriginMode == TrackingOriginModeFlags.Device || requestedTrackingOriginMode == ETrackingOriginMode.Device)
-                successful = inputSubsystem.TryRecenter();
+            { 
+                successful = inputSubsystem.TryRecenter(); 
+            }
 
             return successful;
         }
@@ -202,8 +200,7 @@ namespace SuperColdVR.VR.Core
             while (!cameraInitialized)
             {
                 yield return null;
-                if (!cameraInitialized)
-                    cameraInitialized = SetupCamera();
+                if (!cameraInitialized) { cameraInitialized = SetupCamera(); }
             }
             cameraInitializing = false;
         }
@@ -221,10 +218,7 @@ namespace SuperColdVR.VR.Core
 
         public bool RotateAroundCameraPosition(Vector3 vector, float angleDegrees)
         {
-            if (Camera == null || OriginBaseGameObject == null)
-            {
-                return false;
-            }
+            if (Camera == null || OriginBaseGameObject == null) { return false; }
 
             // Rotate around the camera position
             OriginBaseGameObject.transform.RotateAround(Camera.transform.position, vector, angleDegrees);
@@ -234,15 +228,11 @@ namespace SuperColdVR.VR.Core
 
         public bool MatchOriginUp(Vector3 destinationUp)
         {
-            if (OriginBaseGameObject == null)
-            {
-                return false;
-            }
+            if (OriginBaseGameObject == null) { return false; }
 
-            if (OriginBaseGameObject.transform.up == destinationUp)
-                return true;
+            if (OriginBaseGameObject.transform.up == destinationUp) { return true; }
 
-            var rigUp = Quaternion.FromToRotation(OriginBaseGameObject.transform.up, destinationUp);
+            Quaternion rigUp = Quaternion.FromToRotation(OriginBaseGameObject.transform.up, destinationUp);
             OriginBaseGameObject.transform.rotation = rigUp * transform.rotation;
 
             return true;
@@ -253,10 +243,10 @@ namespace SuperColdVR.VR.Core
             if (Camera != null && MatchOriginUp(destinationUp))
             {
                 // Project current camera's forward vector on the destination plane, whose normal vector is destinationUp.
-                var projectedCamForward = Vector3.ProjectOnPlane(Camera.transform.forward, destinationUp).normalized;
+                Vector3 projectedCamForward = Vector3.ProjectOnPlane(Camera.transform.forward, destinationUp).normalized;
 
                 // The angle that we want the XROrigin to rotate is the signed angle between projectedCamForward and destinationForward, after the up vectors are matched.
-                var signedAngle = Vector3.SignedAngle(projectedCamForward, destinationForward, destinationUp);
+                float signedAngle = Vector3.SignedAngle(projectedCamForward, destinationForward, destinationUp);
 
                 RotateAroundCameraPosition(destinationUp, signedAngle);
 
@@ -271,7 +261,7 @@ namespace SuperColdVR.VR.Core
             if (OriginBaseGameObject != null && MatchOriginUp(destinationUp))
             {
                 // The angle that we want the XR Origin to rotate is the signed angle between the origin's forward and destinationForward, after the up vectors are matched.
-                var signedAngle = Vector3.SignedAngle(OriginBaseGameObject.transform.forward, destinationForward, destinationUp);
+                float signedAngle = Vector3.SignedAngle(OriginBaseGameObject.transform.forward, destinationForward, destinationUp);
 
                 RotateAroundCameraPosition(destinationUp, signedAngle);
 
@@ -285,8 +275,8 @@ namespace SuperColdVR.VR.Core
         {
             if (Camera == null) { return false; }
 
-            var rot = Matrix4x4.Rotate(Camera.transform.rotation);
-            var delta = rot.MultiplyPoint3x4(OriginInCameraSpacePos);
+            Matrix4x4 rot = Matrix4x4.Rotate(Camera.transform.rotation);
+            Vector3 delta = rot.MultiplyPoint3x4(OriginInCameraSpacePos);
             OriginBaseGameObject.transform.position = delta + desiredWorldLocation;
 
             return true;
@@ -302,11 +292,9 @@ namespace SuperColdVR.VR.Core
 
             if (Camera == null)
             {
-                var mainCamera = Camera.main;
-                if (mainCamera != null)
-                    Camera = mainCamera;
-                else
-                    Debug.LogWarning("No Main Camera is found for XR Origin, please assign the Camera field manually.", this);
+                Camera mainCamera = Camera.main;
+                if (mainCamera != null) { Camera = mainCamera; }
+                else { Debug.LogWarning("No Main Camera is found for XR Origin, please assign the Camera field manually.", this); }
             }
 
             // This will be the parent GameObject for any trackables (such as planes) for which
@@ -358,8 +346,8 @@ namespace SuperColdVR.VR.Core
 
         private Pose GetCameraOriginPose()
         {
-            var localOriginPose = Pose.identity;
-            var parent = Camera.transform.parent;
+            Pose localOriginPose = Pose.identity;
+            Transform parent = Camera.transform.parent;
 
             return parent
                 ? parent.TransformPose(localOriginPose)
@@ -374,9 +362,8 @@ namespace SuperColdVR.VR.Core
         {
             if (Camera)
             {
-                var pose = GetCameraOriginPose();
-                TrackablesParent.position = pose.position;
-                TrackablesParent.rotation = pose.rotation;
+                Pose pose = GetCameraOriginPose();
+                TrackablesParent.SetPositionAndRotation(pose.position, pose.rotation);
             }
 
             if (TrackablesParent.hasChanged)
@@ -396,17 +383,15 @@ namespace SuperColdVR.VR.Core
             {
                 // Respond to the mode changing by re-initializing the camera,
                 // or just update the offset height in order to avoid recentering.
-                if (IsModeStale())
-                    TryInitializeCamera();
-                else
-                    MoveOffsetHeight();
+                if (IsModeStale()) { TryInitializeCamera(); }
+                else { MoveOffsetHeight(); }
             }
 
             bool IsModeStale()
             {
                 if (inputSubsystems.Count > 0)
                 {
-                    foreach (var inputSubsystem in inputSubsystems)
+                    foreach (XRInputSubsystem inputSubsystem in inputSubsystems)
                     {
                         // Convert from the request enum to the flags enum that is used by the subsystem
                         TrackingOriginModeFlags equivalentFlagsMode;
@@ -443,10 +428,9 @@ namespace SuperColdVR.VR.Core
 
         protected void OnDestroy()
         {
-            foreach (var inputSubsystem in inputSubsystems)
+            foreach (XRInputSubsystem inputSubsystem in inputSubsystems)
             {
-                if (inputSubsystem != null)
-                    inputSubsystem.trackingOriginUpdated -= OnInputSubsystemTrackingOriginUpdated;
+                if (inputSubsystem != null) { inputSubsystem.trackingOriginUpdated -= OnInputSubsystemTrackingOriginUpdated; }
             }
         }
     }

@@ -41,7 +41,7 @@ namespace SuperColdVR.VR.Locomotion
             return leftHandValue + rightHandValue;
         }
 
-        void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
+        private void SetInputActionProperty(ref InputActionProperty property, InputActionProperty value)
         {
             if (Application.isPlaying) { property.DisableDirectAction(); }
 

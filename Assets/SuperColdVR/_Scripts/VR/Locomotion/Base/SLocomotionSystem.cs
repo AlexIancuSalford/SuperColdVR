@@ -10,7 +10,7 @@ namespace SuperColdVR.VR.Locomotion.Base
         private float TimeMadeExclusive { get; set; }
         public SXROrigin XRRig { get; private set; } = null;
 
-        [field : SerializeField] private float OperationTimeout { get; set; } = 10f;
+        [field : SerializeField] public float OperationTimeout { get; private set; } = 10f;
 
         public bool IsBusy => CurrentExclusiveProvider != null;
 
@@ -29,8 +29,7 @@ namespace SuperColdVR.VR.Locomotion.Base
 
         public ERequestResult RequestExclusiveOperation(SLocomotionProvider provider)
         {
-            if (provider == null)
-                return ERequestResult.Error;
+            if (provider == null) { return ERequestResult.Error; }
 
             if (CurrentExclusiveProvider == null)
             {
@@ -42,7 +41,7 @@ namespace SuperColdVR.VR.Locomotion.Base
             return CurrentExclusiveProvider != provider ? ERequestResult.Busy : ERequestResult.Error;
         }
 
-        void ResetExclusivity()
+        private void ResetExclusivity()
         {
             CurrentExclusiveProvider = null;
             TimeMadeExclusive = 0f;

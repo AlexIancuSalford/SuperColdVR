@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.Assertions;
 using UnityEngine.Serialization;
-using Unity.XR.CoreUtils;
 using SuperColdVR.VR.Utils;
 #if INCLUDE_INPUT_SYSTEM
 using UnityEngine.InputSystem.XR;
